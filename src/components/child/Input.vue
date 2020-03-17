@@ -6,6 +6,7 @@
 </template>
 
 <script>
+	import event from './event'
 	export default{
 		name:'Input',
 		data(){
@@ -17,12 +18,14 @@
 			addItem(){
 				// 调用父组件事件
 				this.$emit('add',this.title)
-				//调用自定义事件
-				this.$emit('')
+				
+			},
+			zidingyiTitle(item){
+				console.log(`自定义title${item}`)
 			}
 		},
 		mounted(){
-			this.$on('addTitile',this.title)
+			event.$on('addTitile',this.zidingyiTitle)
 		}
 	}
 </script>

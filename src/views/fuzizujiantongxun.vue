@@ -5,7 +5,7 @@
 </template>
 
 <script>
-	import child from './child/index.vue'
+	import child from '../components/child/index'
 	export default{
 		components:{
 			child

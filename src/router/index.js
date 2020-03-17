@@ -8,14 +8,18 @@ Vue.use(Router)
 export default new Router({
 	routes: [{
 			path: '/',
-			
-			component: () => import('../components/HelloWorld')
+
+			component: () => import('../views/HelloWorld.vue')
 		},
 		{
 			path: '/fuzizujian',
-			
-			component: () => import('../components/fuzizujiantongxun')
+
+			component: () => import('../views/fuzizujiantongxun.vue')
 		},
-		
+		{
+			path: '/fuzi-test',
+			component: () => import('../views/fuzi-test.vue')
+		}
+
 	]
 })

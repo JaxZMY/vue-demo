@@ -36,6 +36,7 @@
 				})
 			},
 			deleteHandler(id){
+				console.log(id)
 				this.list = this.list.filter(item => item.id !== id)
 			}
 		},
