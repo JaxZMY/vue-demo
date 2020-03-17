@@ -1,7 +1,10 @@
 <template>
 	<div class="hello">
+		
 		<formDemo v-if="showForm"></formDemo>
 		<button @click="showForm = true">显示</button>
+		<br/>
+		<router-link to="/fuzizujian">父子组件通讯</router-link>
 	</div>
 </template>
 
@@ -9,7 +12,7 @@
 export default {
 	name: 'hello',
 	components:{
-		formDemo:()=>import('../components/child.vue')
+		formDemo:()=>import('../components/async.vue')
 	},
 	props: {
 		msg: String

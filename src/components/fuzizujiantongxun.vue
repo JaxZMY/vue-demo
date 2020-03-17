@@ -1,12 +1,16 @@
 <template>
 	<div>
-		异步组件
+		<child></child>
 	</div>
 </template>
 
 <script>
+	import child from './child/index.vue'
 	export default{
-		name:'formDemo'
+		components:{
+			child
+		}
+	
 	}
 </script>
 
