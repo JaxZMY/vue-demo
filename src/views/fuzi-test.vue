@@ -1,10 +1,16 @@
 <!-- 父子组件通讯 -->
 <template>
-  <div></div>
+  <div>
+    <childTest />
+  </div>
 </template>
 
 <script>
+import childTest from "../components/child-test/index";
 export default {
+  components: {
+    childTest
+  },
   data() {
     return {};
   },
