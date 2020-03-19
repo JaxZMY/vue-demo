@@ -1,6 +1,6 @@
 <template>
     <div class="dongtaiChild">
-
+        动态子组件
     </div>
 </template>
 
