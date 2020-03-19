@@ -14,3 +14,9 @@ new Vue({
   router,
   render: h => h(App)
 })
+// router.beforeEach((to, from, next) => {
+//   console.log(to)
+//   console.error(from)
+//   console.log(next)
+
+// })

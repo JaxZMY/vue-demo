@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import event from './event'
+import event from "./event";
 export default {
   name: "Input",
   props: {
@@ -44,17 +44,20 @@ export default {
   created() {},
   //生命周期 - 挂载完成（访问DOM元素）
   mounted() {
-    event.$on('zidingyi',this.gege)
+    event.$on("zidingyi", this.gege);
   },
   methods: {
     onSubmit() {
-      this.$emit("add", this.formInline.title);
       this.$refs.ruleForm.validate((valid, error) => {
-        console.log(error);
+        if (valid) {
+          this.$emit("add", this.formInline.title);
+        }else{
+          console.log(error)
+        }
       });
     },
-    gege(title){
-      console.log(title+'自定义事件')
+    gege(title) {
+      console.log(title + "自定义事件");
     }
   }
 };
