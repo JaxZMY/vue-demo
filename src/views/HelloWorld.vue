@@ -31,6 +31,11 @@
           <el-card shadow="hover">动态组件</el-card>
         </router-link>
       </el-col>
+      <el-col :span="4">
+        <router-link to='/0323Demo'>
+          <el-card shadow="hover">0323Demo</el-card>
+        </router-link>
+      </el-col>
     </el-row>
     <formDemo v-if="showForm"></formDemo>
   </div>

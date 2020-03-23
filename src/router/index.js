@@ -31,6 +31,10 @@ export default new Router({
 		{
 			path: '/dongtai',
 			component: () => import('../views/dongtai.vue')
+		},
+		{
+			path: '/0323Demo',
+			component: () => import('../views/0323Demo.vue')
 		}
 
 	]
