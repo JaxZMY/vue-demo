@@ -108,8 +108,7 @@ export default {
   watch: {
     percent(newPercent) {
       this.setProgressOffset(newPercent);
-	},
-	
+    }
   }
 };
 </script>
@@ -137,14 +136,16 @@ export default {
       position: absolute;
       height: 100%;
       background: yellow;
+      transition: all 0.5s;
     }
 
     .progress-btn-wrapper {
       position: absolute;
       left: -8px;
       top: -13px;
-      width: 30px;
-      height: 30px;
+    //   width: 30px;
+    //   height: 30px;
+      transition: all 0.5s;
     }
 
     .progress-btn {
