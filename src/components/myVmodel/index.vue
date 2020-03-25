@@ -7,6 +7,7 @@
 
 <style  scoped>
 /* @import './index.scss' */
+
 </style>
 
 <script>
