@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const crypto = require('crypto');
+const image = require("imageinfo"); //引用imageinfo模块
 const {
 	URL
 } = require('url');
@@ -9,7 +10,6 @@ const {
 const root = './',
 	exts = ['.jpg', '.png'],
 	max = 5200000; // 5MB == 5242848.754299136
-let falseArr = [];
 let errTotal = 0;
 let sucTotal = 0;
 const options = {
@@ -27,24 +27,120 @@ const options = {
 
 fileList(root);
 
+class ZipImg {
+	constructor(file) {
+		this.file = file;
+		this.allArr = [];
+		this.falseArr = [];
+		this.errTotal = 0;
+		this.sucTotal = 0;
+	}
+	getFileList(path) {
+		var filesList = [];
+		this.readFileList(path, filesList);
+		return filesList;
+	}
+	readFileList(path, filesList) {
+		var files = fs.readdirSync(path);
+		files.forEach((itm, index) => {
+			var stat = fs.statSync(path + itm);
+			if (stat.isDirectory()) {
+				//递归读取文件
+				this.readFileList(path + itm + "/", filesList)
+			} else {
+
+				var obj = {}; //定义一个对象存放文件的路径和名字
+				obj.path = path; //路径
+				obj.filename = itm //名字
+				filesList.push(obj);
+			}
+
+		})
+
+	}
+	getImageFiles(path) {
+		var imageList = [];
+		this.getFileList(path).forEach((item) => {
+			var ms = image(fs.readFileSync(item.path + item.filename));
+
+			ms.mimeType && (imageList.push(item.path + item.filename))
+		});
+		this.allArr = imageList;
+		return imageList;
+
+	}
+	upLoad() {
+		let batchArr = [];
+		//根据全部数组生成批次数组
+		this.allArr.forEach((val, index, arr) => {
+			if (index > 20) {
+				return
+			}
+			batchArr.push(val)
+			// this.allArr.splice(index,1)
+		})
+		batchArr.forEach((val, index) => {
+			let childItem = this.allArr.findIndex((item, index) => {
+				return item == val
+			})
+			this.allArr.splice(childItem, 1)
+		})
+		// let errorMsg;
+		// var req = https.request(options, function(res) {
+		// 	res.on('data', buf => {
+		// 		let obj = JSON.parse(buf.toString());
+		// 		if (obj.error) {
+		// 			errorMsg = {
+		// 				msg: `[${uploadImg}]：压缩失败！报错：${obj.message}`,
+		// 				src: uploadImg
+		// 			};
+		// 			this.errTotal++
+
+		// 		} else {
+
+		// 			fileUpdate(uploadImg, obj).then(proImg => {
+		// 				return proImg
+		// 			}).catch(err => {
+		// 				console.log(err)
+		// 			})
+
+
+		// 		}
+		// 	});
+
+		// });
+		// req.write(fs.readFileSync(img), 'binary');
+		// req.on('error', e => {
+		// 	console.log(e)
+		// });
+
+		// req.end()
+	}
+
+}
+let tinyServe = new ZipImg();
+tinyServe.getImageFiles(root);
+tinyServe.upLoad()
 // 获取文件列表
 function fileList(folder) {
-	
-	fs.readdir(folder, (err, files) => {
-		if (err) console.error(err);
-		files.forEach(file => {
-			fileFilter(folder + file)
-		});
-
-
-
-
-	});
+	let fileArr = fs.readdirSync(folder);
+	fileArr.forEach((val) => {
+		// console.log(val)
+		// fileFilter(folder+val)
+	})
+	// fs.readdir(folder, (err, files) => {
+	// 	if (err) console.error(err);
+	// 	files.forEach((file) => {
+	// 		console.log(file)
+	// 		// fileFilter(folder + file)
+	// 	});
+	// });
 }
-function loopUpload(){
+
+function loopUpload() {
 	falseArr.forEach(currentVal => {
 		//遍历数组再次递归上传，成功就删除条目
-		console.log(falseArr,'失败文件2222')
+		console.log(falseArr, '失败文件2222')
 		fileUpload(currentVal).then(img => {
 			let deleteIndex = falseArr.findIndex((item, index) => {
 				return item == currentVal
@@ -59,7 +155,7 @@ function loopUpload(){
 }
 // 过滤文件格式，返回所有jpg,png图片
 function fileFilter(file) {
-	
+	// let fileObj = fs.statSync(file)
 	fs.stat(file, (err, stats) => {
 		if (err) return console.error(err);
 		if (
@@ -68,24 +164,25 @@ function fileFilter(file) {
 			stats.isFile() &&
 			exts.includes(path.extname(file))
 		) {
+			// myfile = file;
+			console.log(file)
 			//异步上传，成功一个再进行下一个
-			
-			fileUpload(file).then(img => {
-				if (falseArr.length == 0) {
-					console.log(`成功个数：${sucTotal}`)
-					console.log(`失败个数：${errTotal}`)
-				}
-				return img
-			}).catch(err => {
-				//失败的时候将失败的放入数组
-				console.error(err.src, 'PromiseError')
-				falseArr.push(err.src)
-				console.log(falseArr,'失败文件')
-				// loopUpload()
-				
-			})
+			// console.log(file)
+			// fileUpload(file).then(img => {
+			// 	if (falseArr.length == 0) {
+			// 		console.log(`成功个数：${sucTotal}`)
+			// 		console.log(`失败个数：${errTotal}`)
+			// 	}
+			// 	console.log(img)
+			// 	return img
+			// }).catch(err => {
+			// 	//失败的时候将失败的放入数组
+			// 	console.error(err.src, 'PromiseError')
+			// 	falseArr.push(err.src)
+			// 	console.log(falseArr, '失败文件')
+			// 	loopUpload()
 
-
+			// })
 
 		}
 		if (stats.isDirectory()) fileList(file + '/');
@@ -96,39 +193,7 @@ function fileFilter(file) {
 // {"input": { "size": 887, "type": "image/png" },"output": { "size": 785, "type": "image/png", "width": 81, "height": 81, "ratio": 0.885, "url": "https://tinypng.com/web/output/7aztz90nq5p9545zch8gjzqg5ubdatd6" }}
 function fileUpload(img) {
 	let asyncUpload = new Promise((resolve, reject) => {
-		let isok;
-		let errorMsg;
-		var req = https.request(options, function(res) {
-			res.on('data', buf => {
-				let obj = JSON.parse(buf.toString());
-				if (obj.error) {
-					errorMsg = {
-						msg: `[${img}]：压缩失败！报错：${obj.message}`,
-						src: img
-					};
-					errTotal++
-					reject(errorMsg);
 
-				} else {
-					console.log(2222222222222)
-					 fileUpdate(img, obj).then(proImg => {
-						resolve(img)
-						return proImg
-					}).catch(err => {
-						console.log(err)
-					})
-					
-
-				}
-			});
-
-		});
-		req.write(fs.readFileSync(img), 'binary');
-		req.on('error', e => {
-			console.log(e)
-		});
-
-		req.end()
 	})
 	return asyncUpload
 
@@ -143,7 +208,7 @@ function fileUpdate(imgpath, obj) {
 			res.setEncoding('binary');
 			res.on('data', function(data) {
 				body += data;
-				console.log(`[${imgpath}] \n 正在压缩。。。。`)
+				// console.log(`[${imgpath}] \n 正在压缩。。。。`)
 			});
 
 			res.on('end', function() {

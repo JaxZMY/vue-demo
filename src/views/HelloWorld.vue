@@ -23,7 +23,7 @@
       </el-col>
       <el-col :span="4">
         <router-link to='/zidingyiVmodel'>
-          <el-card shadow="hover">自定义Vmodel</el-card>
+          <el-card shadow="hover">进度条</el-card>
         </router-link>
       </el-col>
       <el-col :span="4">
