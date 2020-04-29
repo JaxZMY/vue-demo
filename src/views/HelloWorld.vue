@@ -36,6 +36,11 @@
           <el-card shadow="hover">0323Demo</el-card>
         </router-link>
       </el-col>
+       <el-col :span="4">
+        <router-link to='/0429Demo'>
+          <el-card shadow="hover">VUEX</el-card>
+        </router-link>
+      </el-col>
     </el-row>
     <formDemo v-if="showForm"></formDemo>
   </div>
@@ -54,6 +59,9 @@ export default {
     return {
       showForm: false
     };
+  },
+  created(){
+    console.log(this.$store.state)
   },
   methods: {
     asyncCom() {

@@ -26,8 +26,7 @@ export default new Router({
 		{
 			path: '/zidingyiVmodel',
 			component: () => import('../views/zidingyiVmodel.vue')
-		}
-		,
+		},
 		{
 			path: '/dongtai',
 			component: () => import('../views/dongtai.vue')
@@ -35,6 +34,10 @@ export default new Router({
 		{
 			path: '/0323Demo',
 			component: () => import('../views/0323Demo.vue')
+		},
+		{
+			path: '/0429Demo',
+			component: () => import('../views/0429Demo.vue')
 		}
 
 	]

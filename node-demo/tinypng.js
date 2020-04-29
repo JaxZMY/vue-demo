@@ -85,36 +85,7 @@ class ZipImg {
 			})
 			this.allArr.splice(childItem, 1)
 		})
-		// let errorMsg;
-		// var req = https.request(options, function(res) {
-		// 	res.on('data', buf => {
-		// 		let obj = JSON.parse(buf.toString());
-		// 		if (obj.error) {
-		// 			errorMsg = {
-		// 				msg: `[${uploadImg}]：压缩失败！报错：${obj.message}`,
-		// 				src: uploadImg
-		// 			};
-		// 			this.errTotal++
 
-		// 		} else {
-
-		// 			fileUpdate(uploadImg, obj).then(proImg => {
-		// 				return proImg
-		// 			}).catch(err => {
-		// 				console.log(err)
-		// 			})
-
-
-		// 		}
-		// 	});
-
-		// });
-		// req.write(fs.readFileSync(img), 'binary');
-		// req.on('error', e => {
-		// 	console.log(e)
-		// });
-
-		// req.end()
 	}
 
 }
@@ -137,22 +108,7 @@ function fileList(folder) {
 	// });
 }
 
-function loopUpload() {
-	falseArr.forEach(currentVal => {
-		//遍历数组再次递归上传，成功就删除条目
-		console.log(falseArr, '失败文件2222')
-		fileUpload(currentVal).then(img => {
-			let deleteIndex = falseArr.findIndex((item, index) => {
-				return item == currentVal
-			})
-			falseArr.splice(deleteIndex, 1)
-			return img
-		}).catch(err => {
-			console.log(err)
-			loopUpload()
-		})
-	})
-}
+
 // 过滤文件格式，返回所有jpg,png图片
 function fileFilter(file) {
 	// let fileObj = fs.statSync(file)
@@ -193,7 +149,36 @@ function fileFilter(file) {
 // {"input": { "size": 887, "type": "image/png" },"output": { "size": 785, "type": "image/png", "width": 81, "height": 81, "ratio": 0.885, "url": "https://tinypng.com/web/output/7aztz90nq5p9545zch8gjzqg5ubdatd6" }}
 function fileUpload(img) {
 	let asyncUpload = new Promise((resolve, reject) => {
+		let errorMsg;
+		var req = https.request(options, function(res) {
+			res.on('data', buf => {
+				let obj = JSON.parse(buf.toString());
+				if (obj.error) {
+					errorMsg = {
+						msg: `[${uploadImg}]：压缩失败！报错：${obj.message}`,
+						src: uploadImg
+					};
+					this.errTotal++
 
+				} else {
+
+					fileUpdate(uploadImg, obj).then(proImg => {
+						return proImg
+					}).catch(err => {
+						console.log(err)
+					})
+
+
+				}
+			});
+
+		});
+		req.write(fs.readFileSync(img), 'binary');
+		req.on('error', e => {
+			console.log(e)
+		});
+
+		req.end()
 	})
 	return asyncUpload
 
